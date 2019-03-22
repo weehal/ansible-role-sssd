@@ -3,6 +3,7 @@ galaxy_info:
   author: Michal <warf> Luczak
   description: Install and configure sssd, pam and sshd to get user accounts from LDAP
   company: BulIT for DreamHost
+  role_name: sssd
 
   license: GPLv2
 
