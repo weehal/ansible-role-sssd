@@ -1,0 +1,93 @@
+---
+
+- name: install sssd packages
+  apt:
+    name: "{{ sssd_packages }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  when:
+    - use_sssd
+  tags:
+    - apt
+    - packages
+    - sssd
+
+- name: Ensure sssd.conf exists
+  template:
+    src: sssd.conf.j2
+    dest: /etc/sssd/sssd.conf
+    owner: root
+    group: root
+    mode: 0600
+  # diff: no
+  when:
+    - use_sssd
+  notify:
+    - restart sssd
+  tags:
+    - sssd
+
+- name: Reconfigure pam.d common-session
+  lineinfile:
+    path: /etc/pam.d/common-session
+    regexp: "^session required pam_mkhomedir.so "
+    line: "session required pam_mkhomedir.so skel=/etc/skel umask=0022"
+  when:
+    - use_sssd
+    - sssd_create_homedir
+  tags:
+    - pam
+    - sssd
+
+- name: Reconfigure SSHd
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '{{ item.regexp }}'
+    line: '{{ item.line }}'
+    #backrefs: yes
+  loop:
+    - regexp: '^AuthorizedKeysCommand '
+      line: "AuthorizedKeysCommand {{ sshd_AuthorizedKeysCommand }}"
+    - regexp: '^AuthorizedKeysCommandUser '
+      line: "AuthorizedKeysCommandUser {{ sshd_AuthorizedKeysCommandUser }}"
+  notify:
+    - reload ssh
+  when:
+    - use_sssd
+    - sssd_use_ssh_keys_from_ldap
+  tags:
+    - ssh
+    - sssd
+
+- name: Check nsswitch.conf
+  lineinfile:
+    path: /etc/nsswitch.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  loop:
+    - regexp: '^passwd:'
+      line: 'passwd:         compat systemd sss'
+    - regexp: '^group:'
+      line: 'group:          compat systemd sss'
+    - regexp: '^services:'
+      line: 'services:       db files sss'
+    - regexp: '^sudoers:'
+      line: 'sudoers:        files'
+  when:
+    - use_sssd
+  tags:
+    - nsswitch
+    - sssd
+
+- name: Ensure sssd service is started
+  service:
+    name: sssd
+    state: started
+  when:
+    - use_sssd
+  tags:
+    - service
+    - sssd
+
+...

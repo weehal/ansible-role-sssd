@@ -1,0 +1,30 @@
+---
+use_sssd: true
+
+ldap_scheme: ldaps
+ldap_host: localhost.localdomain
+ldap_port: 636
+
+sssd_packages:
+  - sssd
+  - libsss-sudo
+
+sssd_use_ssh_keys_from_ldap: true
+ldap_user_ssh_public_key: "ipaSshPubKey"
+
+sshd_AuthorizedKeysCommand: /usr/bin/sss_ssh_authorizedkeys
+sshd_AuthorizedKeysCommandUser: root
+
+sssd_domains:
+  - name: localdomain
+sssd_domain: LDAP
+
+sssd_filter_users: ["root", "daemon", "bin", "sys", "sync", "man", "lp", "mail", "news", "uucp",
+    "proxy", "www-data", "backup", "list", "gnats", "nobody", "systemd-network", "systemd-resolve",
+    "syslog", "messagebus", "_apt", "lxd", "uuidd", "dnsmasq", "landscape", "sshd", "pollinate"]
+sssd_filter_groups: ["root", "adm"]
+
+sssd_create_homedir: true
+sssd_cache_credentials: true
+
+...

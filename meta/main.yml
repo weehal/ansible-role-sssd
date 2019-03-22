@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  author: Michal <warf> Luczak
+  description: Install and configure sssd, pam and sshd to get user accounts from LDAP
+  company: BulIT for DreamHost
+
+  license: GPLv2
+
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Ubuntu
+      versions:
+      - bionic
+
+  galaxy_tags:
+    - ubuntu
+    - sssd
+    - ldap
+
+dependencies: []
+

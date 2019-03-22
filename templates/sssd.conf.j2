@@ -1,0 +1,45 @@
+[sssd]
+config_file_version = 2
+reconnection_retries = 3
+sbus_timeout = 30
+services = nss, pam{% if sssd_use_ssh_keys_from_ldap %}, ssh{% endif %}
+
+# {# {%- if sssd_ldap_sudo %}, sudo{% endif -%} #}
+# SSSD will not start if you do not configure any domains.
+# Add new domain configurations as [domain/<NAME>] sections, and
+# then add the list of domains (in the order you want them to be
+# queried) to the "domains" attribute below and uncomment it.
+; domains = LDAP
+domains = {{ sssd_domain }}
+
+[nss]
+filter_groups = {{ sssd_filter_groups |join(', ') }}
+filter_users = {{ sssd_filter_users|join(', ') }}
+reconnection_retries = 3
+
+[pam]
+reconnection_retries = 3
+
+[domain/{{sssd_domain}}]
+; Using enumerate = true leads to high load and slow response
+enumerate = false
+cache_credentials = {{ sssd_cache_credentials|default(false) }}
+
+id_provider = ldap
+id_provider = ldap
+auth_provider = ldap
+ldap_schema = rfc2307bis
+; ldap_group_object_class = posixGroup
+; ldap_group_name = cn
+
+ldap_uri = {{ ldap_scheme }}://{{ ldap_host }}:{{ ldap_port }}/
+ldap_search_base = {{ ldap_search_base }}
+ldap_user_search_base = {{ ldap_search_base_dns }}
+ldap_group_search_base = {{ ldap_group_search_base_dns }}
+; ldap_sudo_search_base = {{ ldap_sudo_search_base|default(ldap_search_base) }}
+; ldap_tls_reqcert = never
+ldap_user_ssh_public_key = {{ ldap_user_ssh_public_key }}
+create_homedir = {{ sssd_create_homedir|default(false) }}
+
+ldap_default_bind_dn = {{ ldap_bind_dn }}
+ldap_default_authtok = {{ ldap_bind_pw }}

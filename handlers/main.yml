@@ -1,0 +1,13 @@
+---
+
+- name: restart sssd
+  service:
+    name: sssd
+    state: restarted
+
+- name: reload ssh
+  service:
+    name: ssh
+    state: reloaded
+
+...
