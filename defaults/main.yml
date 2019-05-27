@@ -27,4 +27,8 @@ sssd_filter_groups: ["root", "adm"]
 sssd_create_homedir: true
 sssd_cache_credentials: true
 
+## APT
+apt_force_apt_get: yes
+apt_install_recommends: no
+
 ...
