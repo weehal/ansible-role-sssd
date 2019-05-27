@@ -6,8 +6,10 @@
     state: present
     update_cache: yes
     cache_valid_time: 3600
+    force_apt_get: "{{ apt_force_apt_get }}"
+    install_recommends: "{{ apt_install_recommends }}"
   when:
-    - use_sssd
+    - use_sssd | bool
   tags:
     - apt
     - packages
@@ -22,7 +24,7 @@
     mode: 0600
   # diff: no
   when:
-    - use_sssd
+    - use_sssd | bool
   notify:
     - restart sssd
   tags:
@@ -34,8 +36,8 @@
     regexp: "^session required pam_mkhomedir.so "
     line: "session required pam_mkhomedir.so skel=/etc/skel umask=0022"
   when:
-    - use_sssd
-    - sssd_create_homedir
+    - use_sssd | bool
+    - sssd_create_homedir | bool
   tags:
     - pam
     - sssd
@@ -54,8 +56,8 @@
   notify:
     - reload ssh
   when:
-    - use_sssd
-    - sssd_use_ssh_keys_from_ldap
+    - use_sssd | bool
+    - sssd_use_ssh_keys_from_ldap | bool
   tags:
     - ssh
     - sssd
@@ -75,7 +77,7 @@
     - regexp: '^sudoers:'
       line: 'sudoers:        files'
   when:
-    - use_sssd
+    - use_sssd | bool
   tags:
     - nsswitch
     - sssd
@@ -85,7 +87,7 @@
     name: sssd
     state: started
   when:
-    - use_sssd
+    - use_sssd | bool
   tags:
     - service
     - sssd
