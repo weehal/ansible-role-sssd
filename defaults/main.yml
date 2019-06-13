@@ -8,6 +8,9 @@ ldap_port: 636
 sssd_packages:
   - sssd
   - libsss-sudo
+  - libpam-sss
+  - libnss-sss
+  - sssd-tools
 
 sssd_use_ssh_keys_from_ldap: true
 ldap_user_ssh_public_key: "ipaSshPubKey"
