@@ -26,16 +26,15 @@ enumerate = false
 cache_credentials = {{ sssd_cache_credentials|default(false) }}
 
 id_provider = ldap
-id_provider = ldap
 auth_provider = ldap
-ldap_schema = rfc2307bis
-; ldap_group_object_class = posixGroup
-; ldap_group_name = cn
+ldap_schema = {{ ldap_schema }}
+ldap_group_object_class = {{ ldap_group_object_class  }}
+ldap_group_name = {{ ldap_group_name }}
 
 ldap_uri = {{ ldap_scheme }}://{{ ldap_host }}:{{ ldap_port }}/
 ldap_search_base = {{ ldap_search_base }}
-ldap_user_search_base = {{ ldap_search_base_dns }}
-ldap_group_search_base = {{ ldap_group_search_base_dns }}
+ldap_user_search_base = {{ ldap_search_base_users }}
+ldap_group_search_base = {{ ldap_search_base_groups }}
 ; ldap_sudo_search_base = {{ ldap_sudo_search_base|default(ldap_search_base) }}
 ; ldap_tls_reqcert = never
 ldap_user_ssh_public_key = {{ ldap_user_ssh_public_key }}
