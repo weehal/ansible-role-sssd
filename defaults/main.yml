@@ -2,6 +2,10 @@
 use_sssd: true
 
 ldap_scheme: ldaps
+ldap_schema: rfc2307bis
+ldap_group_name: cn
+ldap_group_object_class: posixGroup
+ldap_enumerate: False
 ldap_host: localhost.localdomain
 ldap_port: 636
 

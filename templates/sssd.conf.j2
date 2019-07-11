@@ -22,7 +22,7 @@ reconnection_retries = 3
 
 [domain/{{sssd_domain}}]
 ; Using enumerate = true leads to high load and slow response
-enumerate = false
+enumerate = {{ ldap_enumerate }}
 cache_credentials = {{ sssd_cache_credentials|default(false) }}
 
 id_provider = ldap
