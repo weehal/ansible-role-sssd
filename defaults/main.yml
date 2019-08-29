@@ -19,6 +19,10 @@ sssd_packages:
 sssd_use_ssh_keys_from_ldap: true
 ldap_user_ssh_public_key: "ipaSshPubKey"
 
+### for compatibility with versions < 1.0.3
+ldap_search_base_users: "{{ ldap_search_base_dns }}"
+ldap_search_base_groups: "{{ ldap_group_search_base_dns }}"
+
 sshd_AuthorizedKeysCommand: /usr/bin/sss_ssh_authorizedkeys
 sshd_AuthorizedKeysCommandUser: root
 
